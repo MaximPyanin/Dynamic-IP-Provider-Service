@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "dynamic-ip-provider-service"
+version = "0.1.0"
+description = ""
+authors = ["MaximPyanin <maximpyanin@icloud.com>"]
+readme = "README.md"
+packages = [{include = "dynamic_ip_provider_service"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.112.0"
+pymongo = "^4.8.0"
+pydantic = "^2.8.2"
+pre-commit = "^3.8.0"
+ruff = "^0.5.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
