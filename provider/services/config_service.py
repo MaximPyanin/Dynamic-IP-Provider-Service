@@ -7,6 +7,10 @@ class AppConfigError(Exception):
 
 class AppConfig:
     MONGO_URI: str
+    PRIVATE_KEY: str
+    PUBLIC_KEY: str
+    SENDER_EMAIL: str
+    SENDGRID_API_KEY: str
 
     def __init__(self, env):
         for field in self.__annotations__:

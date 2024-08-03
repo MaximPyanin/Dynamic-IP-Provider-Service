@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["MaximPyanin <maximpyanin@icloud.com>"]
 readme = "README.md"
-packages = [{include = "dynamic_ip_provider_service"}]
+packages = [{include = "provider"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -13,6 +13,12 @@ pymongo = "^4.8.0"
 pydantic = "^2.8.2"
 pre-commit = "^3.8.0"
 ruff = "^0.5.6"
+bcrypt = "^4.2.0"
+bson = "^0.5.10"
+cryptography = "^43.0.0"
+pyjwt = {extras = ["extras"], version = "^2.9.0"}
+apscheduler = "^3.10.4"
+sendgrid = "^6.11.0"
 
 
 [build-system]

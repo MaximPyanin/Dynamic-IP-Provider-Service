@@ -10,12 +10,12 @@ class Database:
         self._client = MongoClient(config.MONGO_URI)
         self.db = self._client.get_database("ip-provider")
         self.users_collection = self.db.get_collection("users_collection")
-        self.locations_collection = self.db.get_collection("location_collection")
+        self.addresses_collection = self.db.get_collection("addresses_collection")
 
     @property
     def get_users_collection(self) -> Collection[[Mapping[str, Any]]]:
         return self.users_collection
 
     @property
-    def get_locations_collection(self) -> Collection[[Mapping[str, Any]]]:
-        return self.locations_collection
+    def get_addresses_collection(self) -> Collection[[Mapping[str, Any]]]:
+        return self.addresses_collection
