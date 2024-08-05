@@ -8,3 +8,7 @@ class UseCreationDTO(BaseModel):
     email: EmailStr
     role: Roles
     password: str
+
+
+class UserUpdateDTO(BaseModel):
+    is_premium: bool

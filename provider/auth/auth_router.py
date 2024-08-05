@@ -21,11 +21,7 @@ class AuthRouter:
         return self.router
 
     def signup(self, user_data: UseCreationDTO) -> dict:
-        return {
-            "user_id": self.users_service.create_user(
-                user_data.model_dump()
-            ).binary.decode()
-        }
+        return {"user_id": self.users_service.create_user(user_data.model_dump())}
 
     def signin(self, form_data: OAuth2PasswordRequestForm = Depends()) -> dict:
         id, role = self.auth_service.authenticate_user(

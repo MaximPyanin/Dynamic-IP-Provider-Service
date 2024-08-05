@@ -1,3 +1,5 @@
+from typing import Any, Mapping
+
 from provider.db.database import Database
 from bson import ObjectId
 
@@ -15,5 +17,8 @@ class UsersRepository:
     def insert_one(self, data: dict) -> ObjectId:
         return self.db.get_users_collection.insert_one(data).inserted_id
 
-    def update_one(self, filter: dict, new_data: dict):
-        return self.db.get_users_collection.update_one(filter, new_data)
+    def update_one(self, filter: dict, new_data: dict) -> Mapping[str, Any]:
+        return self.db.get_users_collection.update_one(filter, new_data).raw_result
+
+    def delete_one(self, data: dict) -> Mapping[str, Any]:
+        return self.db.get_users_collection.delete_one(data).raw_result

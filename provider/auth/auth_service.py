@@ -1,5 +1,7 @@
+from jwt import InvalidTokenError
 from datetime import datetime, timedelta
 import uuid
+from typing import Annotated
 from uuid import UUID
 from bson import ObjectId
 from provider.constants.exceptions import Exceptions
@@ -7,6 +9,8 @@ from provider.constants.roles import Roles
 from provider.db.repositories.users_repository import UsersRepository
 from provider.utils.jwt_service import JWTService
 from provider.utils.hash_service import HashService
+from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends
 
 
 class AuthService:
@@ -18,14 +22,14 @@ class AuthService:
         try:
             user = self.users_repository.find_one({"email": email})
         except Exception:  # concr
-            raise Exceptions.AUTHENTICATION_ERROR.value
+            raise Exceptions.LOGIN_ERROR.value
         if not HashService.check_password(password, user["password"].encode()):
-            raise Exceptions.AUTHENTICATION_ERROR.value
+            raise Exceptions.LOGIN_ERROR.value
         return user["_id"], user["role"]
 
     def create_access_token(self, id: ObjectId, role: Roles) -> str | bytes:
         return self.jwt_service.encode_jwt(
-            {"id": id.binary.encode(), "role": role.value}
+            {"sub": id.binary.encode(), "role": role.value}
         )
 
     def decode_jwt(self, token: str | bytes) -> dict:
@@ -36,8 +40,10 @@ class AuthService:
         self.users_repository.update_one(
             {"_id": id},
             {
-                "refresh_token": refresh_token,
-                "expired_at": datetime.utcnow() + timedelta(days=expire_days),
+                "$set": {
+                    "refresh_token": refresh_token,
+                    "expired_at": datetime.utcnow() + timedelta(days=expire_days),
+                }
             },
         )
         return refresh_token
@@ -50,3 +56,12 @@ class AuthService:
         if user["expired_at"] <= datetime.utcnow():
             raise Exceptions.AUTHENTICATION_ERROR.value
         return user["_id"], user["role"]
+
+    def validate_user(
+        self, token: Annotated[str, Depends(OAuth2PasswordBearer)]
+    ) -> dict:
+        try:
+            self.decode_jwt(token)
+        except InvalidTokenError:
+            raise Exceptions.AUTHENTICATION_ERROR
+        return self.decode_jwt(token)

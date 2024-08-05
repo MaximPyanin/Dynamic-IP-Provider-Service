@@ -1,4 +1,8 @@
+from typing import Any, Mapping
+
 from provider.db.database import Database
+from pymongo import DESCENDING
+from bson import ObjectId
 
 
 class AddressesRepository:
@@ -8,5 +12,17 @@ class AddressesRepository:
     def find_one(self, data: dict):
         return self.db.get_addresses_collection.find_one(data)
 
+    # updated
     def find_many(self, data: dict):
-        return self.db.get_addresses_collection.find(data)
+        return self.db.get_addresses_collection.find(data).sort(
+            "created_at", DESCENDING
+        )
+
+    def insert_one(self, new_data: dict) -> ObjectId:
+        return self.db.get_addresses_collection.insert_one(new_data).inserted_id
+
+    def delete_one(self, data: dict) -> int:
+        return self.db.get_addresses_collection.delete_one(data).deleted_count
+
+    def update_one(self, filter: dict, new_data: dict) -> Mapping[str, Any]:
+        return self.db.get_addresses_collection.update_one(filter, new_data).raw_result
