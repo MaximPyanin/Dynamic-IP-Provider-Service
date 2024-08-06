@@ -1,4 +1,6 @@
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
+
+from pymongo.command_cursor import CommandCursor
 
 from provider.db.database import Database
 from bson import ObjectId
@@ -22,3 +24,8 @@ class UsersRepository:
 
     def delete_one(self, data: dict) -> Mapping[str, Any]:
         return self.db.get_users_collection.delete_one(data).raw_result
+
+    def aggragate(
+        self, data: Sequence[Mapping[str, Any]]
+    ) -> CommandCursor[Mapping[str, Any] | Any]:
+        return self.db.get_users_collection.aggregate(data)

@@ -48,5 +48,5 @@ class UsersRouter:
 
     def modify_binding(
         self, binding_id: ObjectId, new_binding: BindingUpdateDTO
-    ) -> Mapping[str, Any]:  #
+    ) -> Mapping[str, Any]:
         return self.users_service.update_binding(binding_id, new_binding.model_dump())

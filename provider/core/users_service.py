@@ -6,19 +6,16 @@ from provider.db.repositories.users_repository import UsersRepository
 from bson import ObjectId
 from provider.utils.hash_service import HashService
 from provider.constants.exceptions import Exceptions
-from provider.notifications.email_service import EmailService
 
 
 class UsersService:
     def __init__(
         self,
         users_repository: UsersRepository,
-        email_service: EmailService,
         addresses_repository: AddressesRepository,
     ):
         self.users_repository = users_repository
         self.addresses_repository = addresses_repository
-        self.email_service = email_service
 
     def create_user(self, data: dict) -> ObjectId:
         try:
@@ -39,17 +36,6 @@ class UsersService:
             return self.create_user(data)
         else:
             raise Exceptions.EMAIL_ERROR.value
-
-    def notify(self) -> None:
-        users = self.users_repository.find_many(
-            {
-                "updated_at": {
-                    "$lt": datetime.datetime.utcnow() - datetime.timedelta(days=10)
-                }
-            }
-        )
-        for user in users:
-            self.email_service.send_email(user["email"])
 
     def get_open_bindings_count(self, user_id: ObjectId) -> int:
         return self.users_repository.find_one({"_id": user_id})["bindings_left"]
@@ -93,4 +79,7 @@ class UsersService:
         self.users_repository.update_one(
             {"_id": user["_id"]}, {"$set": {"updated_at": datetime.datetime.utcnow()}}
         )
-        return self.addresses_repository.update_one({"_id": binding_id}, data)
+        return self.addresses_repository.update_one(
+            {"_id": binding_id},
+            {"$set": {"ip_address": data["ip_address"], "domain": data["domain"]}},
+        )
