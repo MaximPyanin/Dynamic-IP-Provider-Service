@@ -7,7 +7,6 @@ from provider.db.repositories.addresses_repository import AddressesRepository
 from provider.db.repositories.users_repository import UsersRepository
 
 
-# add users
 class AdminService:
     def __init__(
         self,
@@ -61,7 +60,7 @@ class AdminService:
             query.append({"$limit": limit})
         return self.users_repository.aggragate(query)
 
-    def parse_sort(self, sort: str):
+    def parse_sort(self, sort: str) -> dict:
         direction, field = sort.split(",")
         if direction == "asc":
             return {"$sort": {field: 1}}
