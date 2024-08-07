@@ -1,0 +1,6 @@
+prod:
+  hosts:
+    "{{ lookup('env', 'HOST_IP') }}":
+      ansible_port: 22
+      ansible_user: azureuser
+      ansible_ssh_private_key_file: ~/azure.pem

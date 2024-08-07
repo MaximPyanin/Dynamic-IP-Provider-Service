@@ -1,0 +1,24 @@
+- name: deploy_prod
+  hosts: prod
+  tasks:
+    - git:
+        repo: git@github.com:MaximPyanin/Dynamic-IP-Provider-Service.git
+        dest: ~/Dynamic-IP-Provider-Service
+      register: git_result
+      changed_when: "'~/Dynamic-IP-Provider-Service/.git' not in git_result.stdout"
+
+    - command: git pull
+      args:
+        chdir: ~/Dynamic-IP-Provider-Service
+      when: git_result.changed
+
+    - command: docker-compose down
+      args:
+        chdir: ~/Dynamic-IP-Provider-Service
+
+    - command: docker-compose pull
+      args:
+        chdir: ~/Dynamic-IP-Provider-Service
+    - command: docker compose up -d --build
+      args:
+        chdir: ~/Dynamic-IP-Provider-Service
