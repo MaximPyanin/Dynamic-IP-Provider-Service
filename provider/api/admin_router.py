@@ -31,20 +31,26 @@ class AdminRouter:
     def get_user_info(self, user_id: ObjectId) -> dict:
         user_info, user_bindings = self.admin_service.get_user_info(user_id)
         return {
-            "user_info": user_info,
-            "current_binding": user_bindings[0],
-            "bindings_history": user_bindings,
+            "data": {
+                "user_info": user_info,
+                "current_binding": user_bindings[0],
+                "bindings_history": user_bindings,
+            }
         }
 
     def get_all_users(
         self, sort: str | None = None, limit: int | None = 20, skip: int | None = 0
-    ) -> CommandCursor[Mapping[str, Any] | Any]:
-        return self.admin_service.get_all_users(sort, limit, skip)
+    ) -> dict[str, dict[str, CommandCursor[Mapping[str, Any] | Any]]]:
+        return {"data": {"users": self.admin_service.get_all_users(sort, limit, skip)}}
 
-    def modify_account_type(
-        self, user_id: ObjectId, new_type: UserUpdateDTO
-    ) -> Mapping[str, Any]:
-        return self.admin_service.update_account_type(user_id, new_type.model_dump())
+    def modify_account_type(self, user_id: ObjectId, new_type: UserUpdateDTO) -> dict:
+        return {
+            "data": {
+                "updated_user": self.admin_service.update_account_type(
+                    user_id, new_type.model_dump()
+                )
+            }
+        }
 
-    def remove_user(self, user_id: ObjectId) -> Mapping[str, Any]:
-        return self.admin_service.delete_user(user_id)
+    def remove_user(self, user_id: ObjectId) -> dict:
+        return {"data": {"deleted_user": self.admin_service.delete_user(user_id)}}

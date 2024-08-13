@@ -31,22 +31,34 @@ class UsersRouter:
         return self.router
 
     def get_open_bindings_count(self, user_id: ObjectId) -> dict:
-        return {"count": self.users_service.get_open_bindings_count(user_id)}
+        return {"data": {"count": self.users_service.get_open_bindings_count(user_id)}}
 
     def create_binding(self, binding: BindingCreationDTO) -> dict:
-        return {"binding_id": self.users_service.create_binding(binding.dict())}
+        return {
+            "data": {"binding_id": self.users_service.create_binding(binding.dict())}
+        }
 
     def get_user_bindings(self, user_id: ObjectId) -> dict:
         current_binding, bindings_history = self.users_service.get_bindings(user_id)
         return {
-            "current_binding": current_binding,
-            "bindings_history": bindings_history,
+            "data": {
+                "current_binding": current_binding,
+                "bindings_history": bindings_history,
+            }
         }
 
     def remove_binding(self, binding_id: ObjectId) -> dict:
-        return {"deleted_count": self.users_service.delete_binding(binding_id)}
+        return {
+            "data": {"deleted_count": self.users_service.delete_binding(binding_id)}
+        }
 
     def modify_binding(
         self, binding_id: ObjectId, new_binding: BindingUpdateDTO
     ) -> Mapping[str, Any]:
-        return self.users_service.update_binding(binding_id, new_binding.model_dump())
+        return {
+            "data": {
+                "updated_binding": self.users_service.update_binding(
+                    binding_id, new_binding.model_dump()
+                )
+            }
+        }
