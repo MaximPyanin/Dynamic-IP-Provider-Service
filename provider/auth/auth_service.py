@@ -21,7 +21,7 @@ class AuthService:
     def authenticate_user(self, email: str, password: str) -> tuple:
         try:
             user = self.users_repository.find_one({"email": email})
-        except Exception:  # concr
+        except Exception:
             raise Exceptions.LOGIN_ERROR.value
         if not HashService.check_password(password, user["password"].encode()):
             raise Exceptions.LOGIN_ERROR.value
@@ -51,7 +51,7 @@ class AuthService:
     def get_by_refresh_token(self, token: UUID) -> (ObjectId, Roles):
         try:
             user = self.users_repository.find_one({"refresh_token": token})
-        except Exception:  #
+        except Exception:
             raise Exceptions.AUTHENTICATION_ERROR.value
         if user["expired_at"] <= datetime.utcnow():
             raise Exceptions.AUTHENTICATION_ERROR.value
