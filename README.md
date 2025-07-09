@@ -14,8 +14,8 @@
 ### 📂 Clone the Repository
 
 ```bash
-git clone https://github.com/MaximPyanin/Event-Management-System.git
-cd Event-Management-System
+git clone https://github.com/MaximPyanin/Dynamic-IP-Provider-Service.git
+cd Dynamic-IP-Provider-Service
 ```
 ### 🔐 Set Up Environment Variables
 Create a .env file in the root directory of the project and add the following environment variables:
